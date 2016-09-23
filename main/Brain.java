@@ -2,9 +2,7 @@ package main;
 
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
-import lejos.hardware.motor.BaseRegulatedMotor;
 import lejos.hardware.motor.Motor;
-import lejos.hardware.motor.NXTRegulatedMotor;
 import main.parts.EngineController;
 import main.parts.MainSensorController;
 import main.parts.MainSensorController.SensorSide;
