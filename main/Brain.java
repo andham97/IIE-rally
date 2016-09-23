@@ -28,7 +28,7 @@ public class Brain {
          * Constructor for this class, initializes a bunch of important stuff
          */
 	public Brain(){
-		sensorController = new MainSensorController("S1", SensorType.EV3, "S4", SensorType.NXT);
+		sensorController = new MainSensorController("S1", SensorType.NXT, "S4", SensorType.EV3);
                 // EngineController(Bak venstre, bak høyre, forran venstre, forran høyre)
 		engine = new EngineController(Motor.C, Motor.B, Motor.D, Motor.A);
 		engine.setSpeed(engineSpeed);
