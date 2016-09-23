@@ -1,24 +1,37 @@
 package main.parts;
 
-import main.parts.sensors.ColorSensor;
-import main.parts.sensors.SoundSensor;
-import main.parts.sensors.TouchSensor;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import main.parts.sensors.ColorSensorEV3;
+import main.parts.sensors.ColorSensorNXT;
+import main.parts.sensors.Sensor;
 
 public class MainSensorController implements Runnable {
-	/**
-	 * Right touch sensor object
-	 */
-	private TouchSensor rightTouch;
 	
 	/**
-	 * Sound sensor object
+	 * Enum with the different models of sensors
+	 * @author andham97
 	 */
-    private SoundSensor sound;
-    
-    /**
-     * Color sensor object
-     */
-    private ColorSensor color;
+	public enum SensorType {
+		NXT,
+		EV3
+	}
+	
+	/**
+	 * Enum with the different sides the sensors can be configured at, will 
+	 * @author andham97
+	 */
+	public enum SensorSide {
+		LEFT,
+		RIGHT
+	}
+	
+	/**
+	 * HashMap containing the different sensors mapped to the sensorside enum
+	 */
+	private HashMap<SensorSide, Sensor> sensors = new HashMap<SensorSide, Sensor>();
     
     /**
      * Boolean for looping in run method
@@ -31,16 +44,24 @@ public class MainSensorController implements Runnable {
     private Thread thread;
     
     /**
-     * Main constructor taking in the different ports
-     * @param lt Left touch port string
-     * @param rt Right touch port string
-     * @param ss Sound sensor port string
-     * @param lit Light/Color sensor port string
+     * Init the sensors and prepare the object for running
+     * @param leftColorSensorPort
+     * @param leftColorSensorType enum SensorType in this class
+     * @param rightColorSensorPort
+     * @param rightColorSensorType enum SensorType in this class
      */
-    public MainSensorController(String rt, String ss, String lit) {
-    	rightTouch = new TouchSensor(rt);
-    	sound = new SoundSensor(ss);
-    	color = new ColorSensor(lit);
+    public MainSensorController(String leftColorSensorPort,
+    		SensorType leftColorSensorType,
+    		String rightColorSensorPort,
+    		SensorType rightColorSensorType) {
+    	sensors.put(SensorSide.LEFT,
+    			leftColorSensorType == SensorType.EV3 ?
+    					new ColorSensorEV3(leftColorSensorPort) :
+    						new ColorSensorNXT(leftColorSensorPort));
+    	sensors.put(SensorSide.RIGHT,
+    			rightColorSensorType == SensorType.EV3 ?
+    					new ColorSensorEV3(rightColorSensorPort) :
+    						new ColorSensorNXT(rightColorSensorPort));
     	this.running = false;
     }
     
@@ -71,33 +92,21 @@ public class MainSensorController implements Runnable {
      */
     public void run(){
     	while(this.running){
-    		rightTouch.update();
-    		sound.update();
-    		color.update();
+    		Iterator<Entry<SensorSide, Sensor>> i = this.sensors.entrySet().iterator();
+        	while(i.hasNext()){
+    			Entry<SensorSide, Sensor> pair = i.next();
+    			pair.getValue().update();
+    			i.remove();
+    		}
     	}
     }
     
     /**
-     * Return if the right touch sensor is pressed
+     * Get the color value of the specified sensor at the side
+     * @param side enum SensorSide in this class
      * @return
      */
-    public boolean rightTouch(){
-    	return this.rightTouch.getValue() == 1;
-    }
-    
-    /**
-     * Return the sound level of the sound sensor
-     * @return
-     */
-    public float soundLevel(){
-    	return this.sound.getValue();
-    }
-    
-    /**
-     * Return the color level
-     * @return
-     */
-    public float colorLevel(){
-    	return this.color.getValue();
+    public float getValue(SensorSide side){
+    	return this.sensors.get(side).getValue();
     }
 }
