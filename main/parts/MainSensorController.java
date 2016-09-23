@@ -31,7 +31,7 @@ public class MainSensorController implements Runnable {
 	/**
 	 * HashMap containing the different sensors mapped to the sensorside enum
 	 */
-	private HashMap<SensorSide, Sensor> sensors = new HashMap<SensorSide, Sensor>();
+	private HashMap<SensorSide, Sensor> sensors;
     
     /**
      * Boolean for looping in run method
@@ -54,11 +54,12 @@ public class MainSensorController implements Runnable {
     		SensorType leftColorSensorType,
     		String rightColorSensorPort,
     		SensorType rightColorSensorType) {
-    	sensors.put(SensorSide.LEFT,
+    	this.sensors = new HashMap<SensorSide, Sensor>();
+    	this.sensors.put(SensorSide.LEFT,
     			leftColorSensorType == SensorType.EV3 ?
     					new ColorSensorEV3(leftColorSensorPort) :
     						new ColorSensorNXT(leftColorSensorPort));
-    	sensors.put(SensorSide.RIGHT,
+    	this.sensors.put(SensorSide.RIGHT,
     			rightColorSensorType == SensorType.EV3 ?
     					new ColorSensorEV3(rightColorSensorPort) :
     						new ColorSensorNXT(rightColorSensorPort));
@@ -95,7 +96,6 @@ public class MainSensorController implements Runnable {
     		Iterator<Entry<SensorSide, Sensor>> i = this.sensors.entrySet().iterator();
         	while(i.hasNext()){
     			i.next().getValue().update();
-    			i.remove();
     		}
     	}
     }

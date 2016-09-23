@@ -14,7 +14,8 @@ public class ColorSensorNXT implements Sensor {
     public ColorSensorNXT(String portName) {
         Port port = LocalEV3.get().getPort(portName);
         colorSensor = new NXTColorSensor(port);
-        colorProvider = colorSensor.getColorIDMode();
+        colorSensor.setCurrentMode(0);
+        colorProvider = colorSensor.getMode(0);
         colorSample = new float[colorProvider.sampleSize()];
     }
 
@@ -23,6 +24,6 @@ public class ColorSensorNXT implements Sensor {
     }
 
     public float getValue() {
-        return colorSample[0];
+        return (float) colorSensor.getColorID();
     }
 }
