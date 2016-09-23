@@ -68,8 +68,8 @@ public class EngineController {
         int degrees = Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
         motorBackLeft.rotate(degrees, true);
         motorBackRight.rotate(degrees, true);
-        motorFrontLeft.rotate(degrees, true);
-        motorFrontRight.rotate(degrees, dontWait);
+        motorFrontLeft.rotate(-degrees, true);
+        motorFrontRight.rotate(-degrees, dontWait);
     }
 
     /**
@@ -92,8 +92,8 @@ public class EngineController {
         int degrees = -Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
         motorBackLeft.rotate(degrees, true);
         motorBackRight.rotate(degrees, true);
-        motorFrontLeft.rotate(degrees, true);
-        motorFrontRight.rotate(degrees, dontWait);
+        motorFrontLeft.rotate(-degrees, true);
+        motorFrontRight.rotate(-degrees, dontWait);
     }
 
     /**
@@ -102,8 +102,8 @@ public class EngineController {
     public void forward() {
         motorBackLeft.forward();
         motorBackRight.forward();
-        motorFrontLeft.forward();
-        motorFrontRight.forward();
+        motorFrontLeft.backward();
+        motorFrontRight.backward();
     }
 
     /**
@@ -126,8 +126,8 @@ public class EngineController {
         int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorBackLeft.rotate(-turnDeg, true);
         motorBackRight.rotate(turnDeg, true);
-        motorFrontLeft.rotate(-turnDeg, true);
-        motorFrontRight.rotate(turnDeg);
+        motorFrontLeft.rotate(turnDeg, true);
+        motorFrontRight.rotate(-turnDeg);
     }
 
     /**
@@ -139,7 +139,7 @@ public class EngineController {
         int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorBackLeft.rotate(turnDeg, true);
         motorBackRight.rotate(-turnDeg, true);
-        motorFrontLeft.rotate(turnDeg, true);
-        motorFrontRight.rotate(-turnDeg);
+        motorFrontLeft.rotate(-turnDeg, true);
+        motorFrontRight.rotate(turnDeg);
     }
 }
