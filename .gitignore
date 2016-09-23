@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Exceptions
+!*.java
+!README.md
+!LICENSE
+!.gitignore
