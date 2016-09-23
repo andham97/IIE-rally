@@ -5,25 +5,21 @@ import lejos.hardware.Keys;
 import lejos.hardware.motor.Motor;
 import main.parts.EngineController;
 import main.parts.MainSensorController;
+import main.parts.MainSensorController.SensorSide;
+import main.parts.MainSensorController.SensorType;
 
 public class Brain {
 	private Keys keys;
 	private MainSensorController sensorController;
 	private EngineController engine;
-	private boolean isRunning = false;
-	private boolean insideTunnel = false;
 	private int engineSpeed = 5;
 	private float turnDegrees = 25.0f;
-	private int sleepTime = 2000;
-	private float lastColor = 0;
+	private float lastRColor = 0;
+	private float lastLColor = 0;
+	private boolean isRunning = false;
         
         /**
-         * At what sound level should the bot react?
-         */
-        private static final float REACT_SOUND_LEVEL = 0.55f;
-        
-        /**
-         * The color value of the start/stop line.
+         * The color value of the track line.
          */
         private static final int REACT_COLOR_VALUE = 7;
 	
@@ -32,8 +28,8 @@ public class Brain {
          * Constructor for this class, initializes a bunch of important stuff
          */
 	public Brain(){
-		sensorController = new MainSensorController("S4", "S2", "S3");
-		engine = new EngineController(Motor.A, Motor.B);
+		sensorController = new MainSensorController("S1", SensorType.EV3, "S4", SensorType.NXT);
+		engine = new EngineController(Motor.A, Motor.B, Motor.C, Motor.D);
 		engine.setSpeed(engineSpeed);
 		keys = BrickFinder.getLocal().getKeys();
 		this.start();
@@ -81,15 +77,8 @@ public class Brain {
             engine.forward(5, true);
             
             try {
-                if (sensorController.soundLevel() >= REACT_SOUND_LEVEL) {
-                    soundReaction();
-                }
-                
-                this.colorCheck();
-
-                if (sensorController.rightTouch()) {
-                    hitRightReaction();
-                }
+                this.colorCheck(SensorSide.RIGHT, lastRColor);
+                this.colorCheck(SensorSide.LEFT, lastLColor);
 
                 Thread.sleep(50);
             } catch (InterruptedException ex) { }
@@ -97,43 +86,28 @@ public class Brain {
     }
 	
 	/**
-         * Reaction for when the right touch sensor has been hit.
-         * @throws InterruptedException 
-         */
-	public void hitRightReaction() throws InterruptedException{
-		this.stop();
-		engine.leftTurn(turnDegrees);
-		Thread.sleep(sleepTime);
-	}
-	
-	/**
-         * Reaction for when the sound sensor has heard a sound.
-         * @throws InterruptedException 
-         */
-	public void soundReaction() throws InterruptedException{
-		engine.stop();
-		Thread.sleep(sleepTime);
-	}
-	
-	/**
          * Reaction for when the color sensor discovers the black tape.
          */
-	public void blackTapeReaction(){
-		if(!insideTunnel){
-			insideTunnel = true;
-		}else if(isRunning){
-			this.engine.backward(20, false);
-			this.engine.leftTurn(180);
-		}
+	public void blackTapeRightReaction(){
+		engine.rightTurn(turnDegrees);
 	}
-	
-	public void colorCheck(){
-		if (sensorController.colorLevel() != lastColor && sensorController.colorLevel() == REACT_COLOR_VALUE) {
-            lastColor = sensorController.colorLevel();
-            blackTapeReaction();
+	public void blackTapeLeftReaction(){
+		engine.leftTurn(turnDegrees);
+	}
+	/**
+	 * Checks if the recorded color is black or not
+	 */
+	public void colorCheck(SensorSide side, float lastColor){
+		float currentColor = sensorController.getValue(SensorSide.RIGHT);
+		if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
+            lastColor = currentColor;
+            if(side == SensorSide.RIGHT)
+            	blackTapeRightReaction();
+            else
+            	blackTapeLeftReaction();
         }
-        else if(sensorController.colorLevel() != lastColor){
-        	lastColor = sensorController.colorLevel();
+        else if(currentColor != lastColor){
+        	lastColor = currentColor;
         }
 	}
 }
