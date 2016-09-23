@@ -98,7 +98,7 @@ public class Brain {
 	 * Checks if the recorded color is black or not
 	 */
 	public void colorCheck(SensorSide side, float lastColor){
-		float currentColor = sensorController.getValue(SensorSide.RIGHT);
+		float currentColor = sensorController.getValue(side);
 		if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
             lastColor = currentColor;
             if(side == SensorSide.RIGHT)
