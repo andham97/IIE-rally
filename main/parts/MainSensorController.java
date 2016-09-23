@@ -94,8 +94,7 @@ public class MainSensorController implements Runnable {
     	while(this.running){
     		Iterator<Entry<SensorSide, Sensor>> i = this.sensors.entrySet().iterator();
         	while(i.hasNext()){
-    			Entry<SensorSide, Sensor> pair = i.next();
-    			pair.getValue().update();
+    			i.next().getValue().update();
     			i.remove();
     		}
     	}
