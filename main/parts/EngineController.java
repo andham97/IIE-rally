@@ -1,6 +1,6 @@
 package main.parts;
 
-import lejos.hardware.motor.NXTRegulatedMotor;
+import lejos.hardware.motor.BaseRegulatedMotor;
 
 
 public class EngineController {
@@ -20,13 +20,20 @@ public class EngineController {
      */
     public static final int DIR = 1;
 
-    private NXTRegulatedMotor motorLeft;
-    private NXTRegulatedMotor motorRight;
+    private BaseRegulatedMotor motorBackLeft;
+    private BaseRegulatedMotor motorBackRight;
+    private BaseRegulatedMotor motorFrontLeft;
+    private BaseRegulatedMotor motorFrontRight;
 
     
-    public EngineController(NXTRegulatedMotor leftEngine, NXTRegulatedMotor rightEngine) {
-        motorLeft = leftEngine;
-        motorRight = rightEngine;
+    public EngineController(BaseRegulatedMotor backLeft,
+            BaseRegulatedMotor backRight,
+            BaseRegulatedMotor frontLeft,
+            BaseRegulatedMotor frontRight) {
+        motorBackLeft = backLeft;
+        motorBackRight = backRight;
+        motorFrontLeft = frontLeft;
+        motorFrontRight = frontRight;
     }
 
     /**
@@ -36,8 +43,10 @@ public class EngineController {
      */
     public void setSpeed(float speed) {
         float convertedSpeed = speed / WHEEL_CIRCUMFERENCE * 360f;
-        motorLeft.setSpeed(convertedSpeed);
-        motorRight.setSpeed(convertedSpeed);
+        motorBackLeft.setSpeed(convertedSpeed);
+        motorBackRight.setSpeed(convertedSpeed);
+        motorFrontLeft.setSpeed(convertedSpeed);
+        motorFrontRight.setSpeed(convertedSpeed);
     }
 
     /**
@@ -57,8 +66,10 @@ public class EngineController {
      */
     public void forward(float dst, boolean dontWait) {
         int degrees = Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
-        motorLeft.rotate(degrees, true);
-        motorRight.rotate(degrees, dontWait);
+        motorBackLeft.rotate(degrees, true);
+        motorBackRight.rotate(degrees, true);
+        motorFrontLeft.rotate(degrees, true);
+        motorFrontRight.rotate(degrees, dontWait);
     }
 
     /**
@@ -79,16 +90,20 @@ public class EngineController {
      */
     public void backward(float dst, boolean dontWait) {
         int degrees = -Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
-        motorLeft.rotate(degrees, true);
-        motorRight.rotate(degrees, dontWait);
+        motorBackLeft.rotate(degrees, true);
+        motorBackRight.rotate(degrees, true);
+        motorFrontLeft.rotate(degrees, true);
+        motorFrontRight.rotate(degrees, dontWait);
     }
 
     /**
      * Drives forward until stop() is called.
      */
     public void forward() {
-    	motorLeft.forward();
-        motorRight.forward();
+        motorBackLeft.forward();
+        motorBackRight.forward();
+        motorFrontLeft.forward();
+        motorFrontRight.forward();
     }
 
     /**
@@ -96,8 +111,10 @@ public class EngineController {
      * turn of the vehicle because of motor sync issues.
      */
     public void stop() {
-        motorLeft.stop(true);
-        motorRight.stop();
+        motorBackLeft.stop(true);
+        motorBackRight.stop(true);
+        motorFrontLeft.stop(true);
+        motorFrontRight.stop();
     }
 
     /**
@@ -107,8 +124,10 @@ public class EngineController {
      */
     public void leftTurn(float degrees) {
         int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
-        motorRight.rotate(turnDeg, true);
-        motorLeft.rotate(-turnDeg);
+        motorBackLeft.rotate(-turnDeg, true);
+        motorBackRight.rotate(turnDeg, true);
+        motorFrontLeft.rotate(-turnDeg, true);
+        motorFrontRight.rotate(turnDeg);
     }
 
     /**
@@ -118,7 +137,9 @@ public class EngineController {
      */
     public void rightTurn(float degrees) {
         int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
-        motorRight.rotate(-turnDeg, true);
-        motorLeft.rotate(turnDeg);
+        motorBackLeft.rotate(turnDeg, true);
+        motorBackRight.rotate(-turnDeg, true);
+        motorFrontLeft.rotate(turnDeg, true);
+        motorFrontRight.rotate(-turnDeg);
     }
 }

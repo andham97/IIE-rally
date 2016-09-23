@@ -2,7 +2,9 @@ package main;
 
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
+import lejos.hardware.motor.BaseRegulatedMotor;
 import lejos.hardware.motor.Motor;
+import lejos.hardware.motor.NXTRegulatedMotor;
 import main.parts.EngineController;
 import main.parts.MainSensorController;
 import main.parts.MainSensorController.SensorSide;
@@ -29,7 +31,8 @@ public class Brain {
          */
 	public Brain(){
 		sensorController = new MainSensorController("S1", SensorType.EV3, "S4", SensorType.NXT);
-		engine = new EngineController(Motor.A, Motor.B, Motor.C, Motor.D);
+                // EngineController(Bak venstre, bak høyre, forran venstre, forran høyre)
+		engine = new EngineController(Motor.C, Motor.B, Motor.D, Motor.A);
 		engine.setSpeed(engineSpeed);
 		keys = BrickFinder.getLocal().getKeys();
 		this.start();
