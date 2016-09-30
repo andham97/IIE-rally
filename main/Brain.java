@@ -12,9 +12,8 @@ public class Brain {
 	private Keys keys;
 	private MainSensorController sensorController;
 	private EngineController engine;
-	private int engineSpeed = 20;
-	private int turnSpeed = 40;
-	private float turnDegrees = 20.0f;
+	private int engineSpeed = 10;
+	private int turnSpeed = 20;
 	private float lastRColor = 0;
 	private float lastLColor = 0;
 	private boolean isRunning = false;
@@ -32,7 +31,7 @@ public class Brain {
 		sensorController = new MainSensorController("S1", SensorType.NXT, "S4", SensorType.EV3);
                 // EngineController(Bak venstre, bak høyre, forran venstre, forran høyre)
 		engine = new EngineController(Motor.D, Motor.A);
-		engine.setSpeed(engineSpeed);
+		engine.setSpeed(engineSpeed, true, true);
 		keys = BrickFinder.getLocal().getKeys();
 		this.start();
 		sensorController.start();
