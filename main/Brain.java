@@ -30,7 +30,7 @@ public class Brain {
 	public Brain(){
 		sensorController = new MainSensorController("S1", SensorType.NXT, "S4", SensorType.EV3);
                 // EngineController(Bak venstre, bak høyre, forran venstre, forran høyre)
-		engine = new EngineController(Motor.C, Motor.B, Motor.D, Motor.A);
+		engine = new EngineController(Motor.D, Motor.A);
 		engine.setSpeed(engineSpeed);
 		keys = BrickFinder.getLocal().getKeys();
 		this.start();
