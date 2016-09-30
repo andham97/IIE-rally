@@ -98,7 +98,7 @@ public class Brain {
 	 */
 	public void colorCheck(SensorSide side, float lastColor){
 		float currentColor = sensorController.getValue(side);
-		if(currentColor < 0.5)
+		if(currentColor < 0.5 && side == SensorSide.RIGHT)
 			currentColor = 7;
 		if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
             lastColor = currentColor;

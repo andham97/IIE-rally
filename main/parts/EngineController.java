@@ -57,8 +57,8 @@ public class EngineController {
      */
     public void forward(float dst, boolean dontWait) {
         int degrees = Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
-        motorFrontLeft.rotate(-degrees, true);
-        motorFrontRight.rotate(-degrees, dontWait);
+        motorFrontLeft.rotate(degrees, true);
+        motorFrontRight.rotate(degrees, dontWait);
     }
 
     /**
@@ -79,8 +79,8 @@ public class EngineController {
      */
     public void backward(float dst, boolean dontWait) {
         int degrees = -Math.round(dst * 360f / WHEEL_CIRCUMFERENCE) * DIR;
-        motorFrontLeft.rotate(-degrees, true);
-        motorFrontRight.rotate(-degrees, dontWait);
+        motorFrontLeft.rotate(degrees, true);
+        motorFrontRight.rotate(degrees, dontWait);
     }
 
     /**
