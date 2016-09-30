@@ -20,7 +20,7 @@ public class Brain {
         
         /**
          * The color value of the track line.
-         */
+         */	
         private final int REACT_COLOR_VALUE = 7;
 	
         
