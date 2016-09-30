@@ -104,21 +104,29 @@ public class EngineController {
      * Turns to the left by a number of degrees.
      *
      * @param degrees
+     * @throws InterruptedException 
      */
-    public void leftTurn(float degrees) {
-        int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
+    public void leftTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
+        /*int turnDeg = (int)degrees; //Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorFrontLeft.rotate(turnDeg, true);
-        motorFrontRight.rotate(-turnDeg);
+        motorFrontRight.rotate(-turnDeg);*/
+    	motorFrontRight.setSpeed(turnSpeed);
+    	Thread.sleep(200);
+    	motorFrontRight.setSpeed(regularSpeed);
     }
 
     /**
      * Turns to the right by a number of degrees.
      *
      * @param degrees
+     * @throws InterruptedException 
      */
-    public void rightTurn(float degrees) {
-        int turnDeg = Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
+    public void rightTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
+        /*int turnDeg = (int)degrees;//Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorFrontLeft.rotate(-turnDeg, true);
-        motorFrontRight.rotate(turnDeg);
+        motorFrontRight.rotate(turnDeg);*/
+    	motorFrontLeft.setSpeed(turnSpeed);
+    	Thread.sleep(200);
+    	motorFrontLeft.setSpeed(regularSpeed);
     }
 }

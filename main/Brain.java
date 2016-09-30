@@ -12,8 +12,9 @@ public class Brain {
 	private Keys keys;
 	private MainSensorController sensorController;
 	private EngineController engine;
-	private int engineSpeed = 100;
-	private float turnDegrees = 50.0f;
+	private int engineSpeed = 20;
+	private int turnSpeed = 40;
+	private float turnDegrees = 20.0f;
 	private float lastRColor = 0;
 	private float lastLColor = 0;
 	private boolean isRunning = false;
@@ -86,17 +87,19 @@ public class Brain {
 	
 	/**
          * Reaction for when the color sensor discovers the black tape.
+	 * @throws InterruptedException 
          */
-	public void blackTapeRightReaction(){
-		engine.leftTurn(turnDegrees);
+	public void blackTapeRightReaction() throws InterruptedException{
+		engine.rightTurn(turnSpeed, engineSpeed);
 	}
-	public void blackTapeLeftReaction(){
-		engine.rightTurn(turnDegrees);
+	public void blackTapeLeftReaction() throws InterruptedException{
+		engine.leftTurn(turnSpeed, engineSpeed);
 	}
 	/**
 	 * Checks if the recorded color is black or not
+	 * @throws InterruptedException 
 	 */
-	public void colorCheck(SensorSide side, float lastColor){
+	public void colorCheck(SensorSide side, float lastColor) throws InterruptedException{
 		float currentColor = sensorController.getValue(side);
 		if(currentColor < 0.5 && side == SensorSide.RIGHT)
 			currentColor = 7;
