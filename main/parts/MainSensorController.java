@@ -55,11 +55,11 @@ public class MainSensorController implements Runnable {
     		String rightColorSensorPort,
     		SensorType rightColorSensorType) {
     	this.sensors = new HashMap<SensorSide, Sensor>();
-    	this.sensors.put(SensorSide.LEFT,
+    	this.sensors.put(SensorSide.RIGHT,
     			leftColorSensorType == SensorType.EV3 ?
     					new ColorSensorEV3(leftColorSensorPort) :
     						new ColorSensorNXT(leftColorSensorPort));
-    	this.sensors.put(SensorSide.RIGHT,
+    	this.sensors.put(SensorSide.LEFT,
     			rightColorSensorType == SensorType.EV3 ?
     					new ColorSensorEV3(rightColorSensorPort) :
     						new ColorSensorNXT(rightColorSensorPort));

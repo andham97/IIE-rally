@@ -88,10 +88,10 @@ public class Brain {
          * Reaction for when the color sensor discovers the black tape.
          */
 	public void blackTapeRightReaction(){
-		engine.rightTurn(turnDegrees);
+		engine.leftTurn(turnDegrees);
 	}
 	public void blackTapeLeftReaction(){
-		engine.leftTurn(turnDegrees);
+		engine.rightTurn(turnDegrees);
 	}
 	/**
 	 * Checks if the recorded color is black or not
