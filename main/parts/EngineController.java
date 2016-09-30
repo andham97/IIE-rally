@@ -35,7 +35,7 @@ public class EngineController {
      * @param speed
      */
     public void setSpeed(float speed, boolean leftWheel, boolean rightWheel) {
-        float convertedSpeed = speed *0.72f;// / WHEEL_CIRCUMFERENCE * 360f;
+        float convertedSpeed = speed;// / WHEEL_CIRCUMFERENCE * 360f;
         if(leftWheel)
         	motorFrontLeft.setSpeed(convertedSpeed);
         if(rightWheel)
@@ -112,9 +112,9 @@ public class EngineController {
         /*int turnDeg = (int)degrees; //Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorFrontLeft.rotate(turnDeg, true);
         motorFrontRight.rotate(-turnDeg);*/
-    	setSpeed(turnSpeed, true, false);
+    	setSpeed(turnSpeed, false, true);
     	Thread.sleep(200);
-    	setSpeed(regularSpeed, true, false);
+    	setSpeed(regularSpeed, false, true);
     }
 
     /**
@@ -127,8 +127,8 @@ public class EngineController {
         /*int turnDeg = (int)degrees;//Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
         motorFrontLeft.rotate(-turnDeg, true);
         motorFrontRight.rotate(turnDeg);*/
-    	setSpeed(turnSpeed, false, true);
+    	setSpeed(turnSpeed, true, false);
     	Thread.sleep(200);
-    	setSpeed(regularSpeed, false, true);
+    	setSpeed(regularSpeed, true, false);
     }
 }
