@@ -12,8 +12,8 @@ public class Brain {
 	private Keys keys;
 	private MainSensorController sensorController;
 	private EngineController engine;
-	private int engineSpeed = 5;
-	private float turnDegrees = 25.0f;
+	private int engineSpeed = 100;
+	private float turnDegrees = 50.0f;
 	private float lastRColor = 0;
 	private float lastLColor = 0;
 	private boolean isRunning = false;
@@ -21,7 +21,7 @@ public class Brain {
         /**
          * The color value of the track line.
          */
-        private static final int REACT_COLOR_VALUE = 7;
+        private final int REACT_COLOR_VALUE = 7;
 	
         
 	/**
@@ -63,9 +63,9 @@ public class Brain {
 	/**
          * The main running loop for the brain
          */
-    public void run(){
+    public void run() throws Exception{
         // Start a thread to check if any terminate buttons are pressed
-        new Thread("InterruptButtonMoitor") {
+    	new Thread("InterruptButtonMoitor") {
             @Override
             public void run() {
             	while(isRunning){
@@ -77,12 +77,10 @@ public class Brain {
         while(isRunning){
             engine.forward(5, true);
             
-            try {
-                this.colorCheck(SensorSide.RIGHT, lastRColor);
-                this.colorCheck(SensorSide.LEFT, lastLColor);
+            this.colorCheck(SensorSide.RIGHT, lastRColor);
+            this.colorCheck(SensorSide.LEFT, lastLColor);
 
-                Thread.sleep(50);
-            } catch (InterruptedException ex) { }
+            Thread.sleep(50);
         }
     }
 	
@@ -100,6 +98,8 @@ public class Brain {
 	 */
 	public void colorCheck(SensorSide side, float lastColor){
 		float currentColor = sensorController.getValue(side);
+		if(currentColor < 0.5)
+			currentColor = 7;
 		if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
             lastColor = currentColor;
             if(side == SensorSide.RIGHT)
