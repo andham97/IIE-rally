@@ -56,7 +56,7 @@ public class Brain {
          */
 	public void checkInterruptButton(){
 		if(keys.getButtons() != 0){
-			this.stop();
+			System.exit(0);
 		}
 	}
 	
