@@ -108,8 +108,9 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void leftTurn() throws InterruptedException {
+    public void leftTurn(int e) throws InterruptedException {
     	setSpeed(0, true, false);
+    	setSpeed((float)(e*0.7), false, true);
     }
 
     /**
@@ -118,8 +119,9 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void rightTurn() throws InterruptedException {
+    public void rightTurn(int e) throws InterruptedException {
     	setSpeed(0, false, true);
+    	setSpeed((float)(e*0.7), true, false);
     }
     
     public void stopLeftTurn(int regularSpeed)throws InterruptedException{
