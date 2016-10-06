@@ -108,13 +108,8 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void leftTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
-    	/*setSpeed(turnSpeed, false, true);
-    	Thread.sleep(200);
-    	setSpeed(regularSpeed, false, true);*/
+    public void leftTurn() throws InterruptedException {
     	setSpeed(0, true, false);
-    	Thread.sleep(200);
-    	setSpeed(regularSpeed, true, false);
     }
 
     /**
@@ -123,12 +118,14 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void rightTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
-    	/*setSpeed(turnSpeed, true, false);
-    	Thread.sleep(200);
-    	setSpeed(regularSpeed, true, false);*/
+    public void rightTurn() throws InterruptedException {
     	setSpeed(0, false, true);
-    	Thread.sleep(200);
+    }
+    
+    public void stopLeftTurn(int regularSpeed)throws InterruptedException{
+    	setSpeed(regularSpeed, true, false);
+    }
+    public void stopRightTurn(int regularSpeed)throws InterruptedException{
     	setSpeed(regularSpeed, false, true);
     }
 }

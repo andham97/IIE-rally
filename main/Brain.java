@@ -13,10 +13,13 @@ public class Brain {
 	private MainSensorController sensorController;
 	private EngineController engine;
 	private int engineSpeed = 200;
-	private int turnSpeed = 400;
 	private float lastRColor = 0;
 	private float lastLColor = 0;
 	private boolean isRunning = false;
+	private boolean inRTurn = false;
+	private boolean inLTurn = false;
+	private boolean rightLast = false;
+	private boolean forceForward = false;
         
         /**
          * The color value of the track line.
@@ -80,7 +83,7 @@ public class Brain {
             this.colorCheck(SensorSide.RIGHT, lastRColor);
             this.colorCheck(SensorSide.LEFT, lastLColor);
 
-            Thread.sleep(50);
+            Thread.sleep(20);
         }
     }
 	
@@ -89,28 +92,73 @@ public class Brain {
 	 * @throws InterruptedException 
          */
 	public void blackTapeRightReaction() throws InterruptedException{
-		engine.rightTurn(turnSpeed, engineSpeed);
+		inRTurn = true;
+		if(!inLTurn && rightLast){
+			engine.rightTurn();
+		}else{
+			blackTapeBothReaction(true);
+		}
+		rightLast = true;
 	}
 	public void blackTapeLeftReaction() throws InterruptedException{
-		engine.leftTurn(turnSpeed, engineSpeed);
+		inLTurn = true;
+		if(!inRTurn && !rightLast){
+			engine.leftTurn();
+		}else{
+			blackTapeBothReaction(false);
+		}
+		rightLast = false;
 	}
+	
+	public void noTapeRightReaction() throws InterruptedException{
+		if(inRTurn)
+			engine.stopRightTurn(engineSpeed);
+		inRTurn = false;
+	}
+	public void noTapeLeftReaction() throws InterruptedException{
+		if(inLTurn)
+			engine.stopLeftTurn(engineSpeed);
+		inLTurn = false;
+	}
+	
+	public void blackTapeBothReaction(boolean rightTurn) throws InterruptedException{
+		forceForward = true;
+		if(rightTurn)
+			engine.rightTurn();
+		else
+			engine.leftTurn();
+		engine.forward(5, true);
+		Thread.sleep(100);
+		engine.forward(5, true);
+		engine.stopLeftTurn(engineSpeed);
+		engine.stopRightTurn(engineSpeed);
+		Thread.sleep(200);
+		forceForward = false;
+	}
+	
 	/**
 	 * Checks if the recorded color is black or not
 	 * @throws InterruptedException 
 	 */
 	public void colorCheck(SensorSide side, float lastColor) throws InterruptedException{
-		float currentColor = sensorController.getValue(side);
-		if(currentColor < 0.5 && side == SensorSide.RIGHT)
-			currentColor = 7;
-		if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
-            lastColor = currentColor;
-            if(side == SensorSide.RIGHT)
-            	blackTapeRightReaction();
-            else
-            	blackTapeLeftReaction();
-        }
-        else if(currentColor != lastColor){
-        	lastColor = currentColor;
-        }
+		if(!forceForward){
+			float currentColor = sensorController.getValue(side);
+			if(currentColor < 0.5 && side == SensorSide.RIGHT)
+				currentColor = 7;
+			if (currentColor != lastColor && currentColor == REACT_COLOR_VALUE) {
+	            lastColor = currentColor;
+	            if(side == SensorSide.RIGHT)
+	            	blackTapeRightReaction();
+	            else
+	            	blackTapeLeftReaction();
+	        }
+	        else if(currentColor != lastColor){
+	        	lastColor = currentColor;
+	        	if(side == SensorSide.RIGHT)
+	        		noTapeRightReaction();
+	        	else
+	        		noTapeLeftReaction();
+	        }
+		}
 	}
 }
