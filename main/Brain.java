@@ -12,8 +12,8 @@ public class Brain {
 	private Keys keys;
 	private MainSensorController sensorController;
 	private EngineController engine;
-	private int engineSpeed = 100;
-	private int turnSpeed = 200;
+	private int engineSpeed = 200;
+	private int turnSpeed = 400;
 	private float lastRColor = 0;
 	private float lastLColor = 0;
 	private boolean isRunning = false;

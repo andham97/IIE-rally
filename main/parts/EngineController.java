@@ -109,12 +109,12 @@ public class EngineController {
      * @throws InterruptedException 
      */
     public void leftTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
-        /*int turnDeg = (int)degrees; //Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
-        motorFrontLeft.rotate(turnDeg, true);
-        motorFrontRight.rotate(-turnDeg);*/
-    	setSpeed(turnSpeed, false, true);
+    	/*setSpeed(turnSpeed, false, true);
     	Thread.sleep(200);
-    	setSpeed(regularSpeed, false, true);
+    	setSpeed(regularSpeed, false, true);*/
+    	setSpeed(0, true, false);
+    	Thread.sleep(200);
+    	setSpeed(regularSpeed, true, false);
     }
 
     /**
@@ -124,11 +124,11 @@ public class EngineController {
      * @throws InterruptedException 
      */
     public void rightTurn(int turnSpeed, int regularSpeed) throws InterruptedException {
-        /*int turnDeg = (int)degrees;//Math.round(TURN_CIRCUMFERENCE * degrees / WHEEL_CIRCUMFERENCE) * DIR;
-        motorFrontLeft.rotate(-turnDeg, true);
-        motorFrontRight.rotate(turnDeg);*/
-    	setSpeed(turnSpeed, true, false);
+    	/*setSpeed(turnSpeed, true, false);
     	Thread.sleep(200);
-    	setSpeed(regularSpeed, true, false);
+    	setSpeed(regularSpeed, true, false);*/
+    	setSpeed(0, false, true);
+    	Thread.sleep(200);
+    	setSpeed(regularSpeed, false, true);
     }
 }
