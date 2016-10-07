@@ -35,11 +35,10 @@ public class EngineController {
      * @param speed
      */
     public void setSpeed(float speed, boolean leftWheel, boolean rightWheel) {
-        float convertedSpeed = speed;// / WHEEL_CIRCUMFERENCE * 360f;
         if(leftWheel)
-        	motorFrontLeft.setSpeed(convertedSpeed);
+        	motorFrontLeft.setSpeed(speed);
         if(rightWheel)
-        	motorFrontRight.setSpeed(convertedSpeed);
+        	motorFrontRight.setSpeed(speed);
     }
 
     /**
@@ -89,8 +88,8 @@ public class EngineController {
      * Drives forward until stop() is called.
      */
     public void forward() {
-        motorFrontLeft.backward();
-        motorFrontRight.backward();
+        motorFrontLeft.forward();
+        motorFrontRight.forward();
     }
 
     /**
@@ -99,7 +98,7 @@ public class EngineController {
      */
     public void stop() {
         motorFrontLeft.stop(true);
-        motorFrontRight.stop();
+        motorFrontRight.stop(true);
     }
 
     /**
@@ -108,9 +107,10 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void leftTurn(int e) throws InterruptedException {
-    	setSpeed(0, true, false);
-    	setSpeed((float)(e*1.7), false, true);
+    public void leftTurn(float e, float stabilizer, float turnM) throws InterruptedException {
+    	setSpeed(stabilizer*turnM, true, false);
+    	setSpeed((e*turnM), false, true);
+    	forward();
     }
 
     /**
@@ -119,15 +119,18 @@ public class EngineController {
      * @param degrees
      * @throws InterruptedException 
      */
-    public void rightTurn(int e) throws InterruptedException {
-    	setSpeed(0, false, true);
-    	setSpeed((float)(e*1.7), true, false);
+    public void rightTurn(float e, float stabilizer, float turnM) throws InterruptedException {
+    	setSpeed(stabilizer*turnM, false, true);
+    	setSpeed((e*turnM), true, false);
+    	forward();
     }
     
-    public void stopLeftTurn(int regularSpeed)throws InterruptedException{
+    public void stopLeftTurn(float regularSpeed)throws InterruptedException{
     	setSpeed(regularSpeed, true, false);
+    	forward();
     }
-    public void stopRightTurn(int regularSpeed)throws InterruptedException{
+    public void stopRightTurn(float regularSpeed)throws InterruptedException{
     	setSpeed(regularSpeed, false, true);
+    	forward();
     }
 }

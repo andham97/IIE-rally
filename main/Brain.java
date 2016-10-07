@@ -13,10 +13,18 @@ public class Brain {
     private Keys keys;
     private MainSensorController sensorController;
     private EngineController engine;
-    private int engineSpeed = 200;
-    private boolean sideOfStroke = false;
-    private boolean lastRight = false;
+    private float engineSpeed = 350f;
+    private float engineMinM = 0.6f;
+    private float engineSpeedM = engineMinM;
+    private float engineMaxM = 1.4f;
+    private float stabilizer = 0.0f;
+    private float turnM = 0.6f;
+    private int stabTimer = 0;
+    private int stabTimerLimit = 400;
+    private int speedIncCounter = 0;
+    private boolean emergencyLeft = false;
     private boolean isRunning = false;
+    private boolean prevTurnRight = true;
 
     /**
      * Constructor for this class, initializes a bunch of important stuff
@@ -68,43 +76,62 @@ public class Brain {
                 }
             }
         }.start();
-
+        engine.forward();
         while (isRunning) {
-            engine.forward(5, true);
             this.checkColor();
-            Thread.sleep(2);
         }
+    }
+    
+    public void stabTimerIncrease(boolean rightTurn){
+    	stabTimer += 1;
+    	if(stabTimer >= stabTimerLimit){
+    		stabTimer = 0;
+    		stabilizer = 0.0f;
+    	}else if(prevTurnRight != rightTurn){
+    		stabTimer = 0;
+    		if(stabilizer < engineSpeed){
+    			stabilizer += 100.0f;
+    		}
+    	}
+    	prevTurnRight = rightTurn;
     }
     
     public void checkColor() throws InterruptedException{
     	float leftSide = sensorController.getValue(SensorSide.LEFT);
     	float rightSide = sensorController.getValue(SensorSide.RIGHT) < 0.5 ? 7f : 0f;
-    	System.out.println(leftSide);
-    	System.out.println(rightSide);
-    	System.out.println("");
-    	if(rightSide != 7 && leftSide != 7){
-    		if(sideOfStroke){
-    			engine.stopLeftTurn(engineSpeed);
-        		engine.leftTurn(engineSpeed);
+    	//Both sides are ON the tape OR ONLY right side
+    	if((rightSide == 7 && leftSide == 7) || (leftSide != 7 && rightSide == 7)){
+    		emergencyLeft = false;
+    		engine.stopLeftTurn(engineSpeed*engineSpeedM);//*engineSpeedM);
+    		engine.stopRightTurn(engineSpeed*engineSpeedM);//*engineSpeedM);
+    		speedIncCounter ++;
+    		if(speedIncCounter == 500){
+    			if(engineSpeedM < engineMaxM)
+    				engineSpeedM += 0.4f;
+    			speedIncCounter = 0;
     		}
-    		else {
-    			engine.stopLeftTurn(engineSpeed);
-        		engine.rightTurn(engineSpeed);
-    		}
-    		
     	}
+    	//Both sides are NOT on tape
+    	else if(rightSide != 7 && leftSide != 7){
+    		if(emergencyLeft){
+    			engine.leftTurn(engineSpeed, stabilizer, turnM);
+    			stabTimerIncrease(false);
+    			engineSpeedM = engineMinM;
+    			speedIncCounter = 0;
+    		}else{
+	    		engine.rightTurn(engineSpeed, stabilizer, turnM);
+	    		stabTimerIncrease(true);
+	    		engineSpeedM = engineMinM;
+	    		speedIncCounter = 0;
+    		}
+    	}
+    	//Left side is ON tape & Right side is NOT
     	else if(leftSide == 7 && rightSide != 7){
-    		if(lastRight)
-    			sideOfStroke = true;
-    		engine.stopRightTurn(engineSpeed);
-    		engine.leftTurn(engineSpeed);
-    		lastRight = false;
-    	}
-    	else {
-    		lastRight = true;
-    		sideOfStroke = false;
-    		engine.stopLeftTurn(engineSpeed);
-    		engine.stopRightTurn(engineSpeed);
+    		engine.leftTurn(engineSpeed, stabilizer, turnM);
+    		stabTimerIncrease(false);
+    		emergencyLeft = true;
+    		engineSpeedM = engineMinM;
+    		speedIncCounter = 0;
     	}
     }
 }
